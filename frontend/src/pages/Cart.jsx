@@ -31,7 +31,12 @@ const Cart = () => {
     setCartData(tempData);
   }, [cartItems]);
 
-  return (
+  return cartData.length === 0 ? (
+    <div className="text-center text-gray-400 py-10 text-xl">
+      <span role="img" aria-label="empty cart" className="text-4xl"></span>
+      <div>No items in your cart yet!</div>
+    </div>
+  ) : (
     <div className="border-t pt-14">
       <div className="text-2xl mb-3">
         <Title text1={"YOUR"} text2={"CART"} />
