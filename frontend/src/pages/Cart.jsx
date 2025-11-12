@@ -3,6 +3,7 @@ import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 import CartTotal from "../components/CartTotal";
+import Button from "../components/Button";
 
 const Cart = () => {
   const { products, currency, cartItems, updateQuantity, navigate } =
@@ -32,7 +33,7 @@ const Cart = () => {
   }, [cartItems]);
 
   return cartData.length === 0 ? (
-    <div className="text-center text-gray-400 py-10 text-xl">
+    <div className="text-center text-gray-400 py-10 text-xl border-t mt-1">
       <span role="img" aria-label="empty cart" className="text-4xl"></span>
       <div>No items in your cart yet!</div>
     </div>
@@ -101,14 +102,18 @@ const Cart = () => {
       <div className="flex justify-end my-20">
         <div className="w-full sm:w-[450px]">
           <CartTotal />
-          <div className="w-full text-end">
+          {/* <div className="w-full text-end">
             <button
               className="bg-black text-white text-sm my-8 px-8 py-3"
               onClick={() => navigate("/place-order")}
             >
               PROCEED TO CHECKOUT
-            </button>
-          </div>
+            </button>{" "}
+          </div> */}
+          <Button
+            text1={"PROCEED TO CHECKOUT"}
+            clickMethod={() => navigate("/place-order")}
+          />
         </div>
       </div>
     </div>
