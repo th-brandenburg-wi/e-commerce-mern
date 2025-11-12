@@ -79,7 +79,7 @@ const PlaceOrder = () => {
           {/* PAYEMENT METHOD SELECTION */}
           <div
             onClick={() => {
-              console.log("Current" + method);
+              //console.log("Current" + method);
               setMethod("stripe");
             }}
             className="flex gap-3 flex-col lg:flex-row"
@@ -95,7 +95,7 @@ const PlaceOrder = () => {
           </div>
           <div
             onClick={() => {
-              console.log("Current" + method);
+              //console.log("Current" + method);
               setMethod("cod");
             }}
             className="flex items-center gap-3 border p-2 px-3 cursor-pointer"
