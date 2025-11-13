@@ -6,6 +6,21 @@ meta {
 
 post {
   url: {{host}}/api/user/admin
-  body: none
-  auth: none
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: me@admin.comadmin
+}
+
+body:json {
+  {
+    "email": "me@admin.com",
+    "password": "admin"
+  }
+}
+
+vars:post-response {
+  adminToken: res.body.token
 }
