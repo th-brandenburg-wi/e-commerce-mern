@@ -76,8 +76,9 @@ const loginUser = async (req, res) => {
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    // You can add more robust admin checks here
+    // You can add more robust admin checks here | for test purposes
     const user = await userModel.findOne({ email });
+    //console.log("user --> " + user);
     if (!user || !user.email.endsWith("@admin.com")) {
       return res.status(403).json({ message: "Not authorized as admin" });
     }
@@ -85,13 +86,12 @@ const adminLogin = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+    // console.log("TOKEN -> " + process.env.ADMIN_EMAIL + process.env.ADMIN_PW); | for test purposes
     const token = jwt.sign(
-      { userId: user._id, admin: true },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
+      process.env.ADMIN_EMAIL + process.env.ADMIN_PW,
+      process.env.JWT_SECRET
     );
+    console.log("token admin --> " + token);
     res.status(200).json({ message: "Admin login successful", token, user });
   } catch (error) {
     res
