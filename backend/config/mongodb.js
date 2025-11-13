@@ -5,7 +5,7 @@ import { MongoClient } from "mongodb";
 
 const connectDB = async () =>
   await mongoose
-    .connect(process.env.MONGODB_URI)
+    .connect(process.env.MONGODB_URI + "/project-db")
     .then(() => {
       console.log("DB Connected");
     })
