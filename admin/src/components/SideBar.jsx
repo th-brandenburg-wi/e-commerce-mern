@@ -15,7 +15,7 @@ const SideBar = () => {
         </NavLink>
 
         <NavLink
-          to={"/orders"}
+          to={"/list"}
           className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-1"
         >
           <img src={assets.order_icon} className="w-5 h-5" alt="" />
@@ -23,7 +23,7 @@ const SideBar = () => {
         </NavLink>
 
         <NavLink
-          to={"/list"}
+          to={"/orders"}
           className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-1"
         >
           <img src={assets.order_icon} className="w-5 h-5" alt="" />

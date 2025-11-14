@@ -187,8 +187,8 @@ const Add = ({ token }) => {
         <div>
           <p className="mb-2 ">Product Price</p>
           <input
-            onChange={(e) => setSubCategory(e.target.value)}
-            //value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            value={price}
             className="w-full px-3 py-2 sm:w-[120px] "
             type="Number"
             placeholder="25"

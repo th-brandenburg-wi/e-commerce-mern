@@ -95,8 +95,9 @@ const listProduct = async (req, res) => {
 // Remove Product
 
 const removeProduct = async (req, res) => {
+  console.log("product id --> " + req.params.id);
   try {
-    await productModel.findByIdAndDelete(req.body.id);
+    await productModel.findByIdAndDelete(req.params.id);
     res.json({
       success: true,
       message: "Product deleted!",
@@ -113,7 +114,8 @@ const removeProduct = async (req, res) => {
 
 const singleProduct = async (req, res) => {
   try {
-    const { productId } = req.body.id;
+    const productId = req.body.id;
+    console.log("product id --> " + productId);
     const product = await productModel.findById(productId);
 
     if (product)
@@ -121,12 +123,35 @@ const singleProduct = async (req, res) => {
         success: true,
         product,
       });
+    else {
+      res.json({
+        success: false,
+        message: "Product not found!",
+      });
+    }
   } catch (error) {
     res.json({
-      success: true,
+      success: false,
       message: error.message,
     });
   }
 };
 
-export { addProduct, listProduct, removeProduct, singleProduct };
+// Update Product
+const updateProduct = async (req, res) => {
+  try {
+    const updated = await productModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updated) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json({ message: "Product updated", product: updated });
+  } catch (error) {
+    res.status(500).json({ message: "Update failed", error: error.message });
+  }
+};
+
+export { addProduct, listProduct, removeProduct, singleProduct, updateProduct };
