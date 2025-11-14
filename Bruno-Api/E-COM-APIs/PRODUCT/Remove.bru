@@ -4,14 +4,12 @@ meta {
   seq: 3
 }
 
-post {
-  url: {{host}}/api/product/remove
+delete {
+  url: {{host}}/api/product/remove/:id
   body: json
   auth: none
 }
 
-body:json {
-  {
-    "id": "691623170b4fcc0fb5f4d8b6"
-  }
+params:path {
+  id: {{productID}}
 }

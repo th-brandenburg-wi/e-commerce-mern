@@ -1,0 +1,42 @@
+meta {
+  name: Update Product
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{host}}/api/product/update/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 6917aa6115922780e8c94a70
+}
+
+headers {
+  token: {{adminToken}}
+}
+
+auth:bearer {
+  token: 
+}
+
+body:json {
+  {
+    "name":"Product Test 2"
+  }
+}
+
+body:multipart-form {
+  name: Produkt Test 2
+  ~description: test-description
+  ~price: 100
+  ~category: test-category
+  ~subcategory: test-subcat
+  ~image1: @file(/Users/user/Documents/Workstation/THB/MERN/assets/frontend_assets/p_img2_1.png)
+  ~sizes: ["M", "S"]
+  ~image2: @file(/Users/user/Documents/Workstation/THB/MERN/assets/frontend_assets/p_img2_2.png)
+  ~image3: @file(/Users/user/Documents/Workstation/THB/MERN/assets/frontend_assets/p_img2_3.png)
+  ~image4: @file(/Users/user/Documents/Workstation/THB/MERN/assets/frontend_assets/p_img2_4.png)
+}
