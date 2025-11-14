@@ -43,6 +43,18 @@ const Add = ({ token }) => {
 
       if (response.data.success) {
         toast.success("Product Added!");
+        setName("");
+        setDescription("");
+        setCategory("");
+        setSubCategory("");
+        setPrice("");
+        setSizes([]);
+        setImage1(false);
+        setImage2(false);
+        setImage3(false);
+        setImage4(false);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.log("error -->", error);
