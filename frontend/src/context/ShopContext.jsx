@@ -1,11 +1,14 @@
 import { createContext, useEffect, useState } from "react";
-import { products } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { backendUrl } from "../utils";
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
+  const [products, setProducts] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const currency = "€";
   const delivery_fee = 5;
   const [search, setSearch] = useState("");
@@ -13,16 +16,40 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("token");
+    }
+  }, [token]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/product/list`);
+      if (response.data.success) {
+        setProducts(response.data.products);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch products");
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // NOTE: The cart is currently managed on the frontend only.
+  // There are no backend APIs for cart management yet.
   const addToCart = (itemId, size) => {
     if (!itemId || !size) {
       if (!size) toast.error("Select a size");
       return;
     }
     setCartItems((prev) => {
-      const cartData = structuredClone(prev || {});
+      const cartData = { ...prev };
       if (!cartData[itemId]) cartData[itemId] = {};
       cartData[itemId][size] = (cartData[itemId][size] || 0) + 1;
-      console.log("CartData --> ", cartData);
       return cartData;
     });
   };
@@ -42,20 +69,23 @@ const ShopContextProvider = (props) => {
   };
 
   const updateQuantity = async (itemId, size, qty) => {
-    let cartData = structuredClone(cartItems);
-    cartData[itemId][size] = qty;
-
-    setCartItems(cartData);
+    let cartData = { ...cartItems };
+    if (cartData[itemId]) {
+      cartData[itemId][size] = qty;
+      setCartItems(cartData);
+    }
   };
 
   const getCartTotalAmount = () => {
     let total = 0;
-    if (!cartItems || typeof cartItems !== "object") return 0;
-    // Build a map for O(1) product lookup
-    const productMap = {};
-    for (const product of products) {
-      productMap[product._id] = product;
-    }
+    if (!cartItems || typeof cartItems !== "object" || !products.length)
+      return 0;
+
+    const productMap = products.reduce((map, product) => {
+      map[product._id] = product;
+      return map;
+    }, {});
+
     for (const [productId, sizes] of Object.entries(cartItems)) {
       const product = productMap[productId];
       if (!product) continue;
@@ -69,6 +99,8 @@ const ShopContextProvider = (props) => {
 
   const value = {
     products,
+    token,
+    setToken,
     currency,
     delivery_fee,
     search,
