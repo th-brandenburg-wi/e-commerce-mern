@@ -5,76 +5,52 @@ import productModel from "../models/productModel.js";
 
 const addProduct = async (req, res) => {
   try {
-    // Import Data from User Inputs
     const {
       name,
       description,
       price,
       category,
       subcategory,
-      sizes,
       bestseller,
+      sizes,
     } = req.body;
+    const images = [];
 
-    const image1 = req.files.image1 && req.files.image1[0];
-    const image2 = req.files.image2 && req.files.image2[0];
-    const image3 = req.files.image3 && req.files.image3[0];
-    const image4 = req.files.image4 && req.files.image4[0];
+    // Handle image uploads (assuming you're using multer for req.files)
+    const imageFiles = [
+      req.files?.image1 && req.files?.image1[0],
+      req.files?.image2 && req.files?.image2[0],
+      req.files?.image3 && req.files?.image3[0],
+      req.files?.image4 && req.files?.image4[0],
+    ].filter((item) => item !== undefined);
 
-    const images = [image1, image2, image3, image4].filter(
-      (item) => item !== undefined
-    );
+    for (const file of imageFiles) {
+      const uploadResult = await cloudinary.uploader?.upload(file.path, {
+        folder: "products",
+      });
+      images.push({
+        url: uploadResult.secure_url,
+        public_id: uploadResult.public_id,
+      });
+    }
 
-    console.log({
+    console.log("stored images -->" + images.values);
+    const product = new productModel({
       name,
       description,
-      price,
-      category,
-      subcategory,
-      sizes,
-      bestseller,
-    });
-
-    let imagesUrl = await Promise.all(
-      images.map(async (item) => {
-        let result = await cloudinary.uploader.upload(item.path, {
-          resource_type: "image",
-        });
-        return result.secure_url;
-      })
-    );
-
-    console.log({
-      name,
-      description,
-      price,
-      category,
-      subcategory,
-      sizes,
-      bestseller,
-    });
-    console.log(imagesUrl);
-
-    const productData = {
-      name,
-      description,
-      category,
       price: Number(price),
+      category,
       subcategory,
       bestseller: bestseller === "true" ? true : false,
-      sizes: JSON.parse(sizes),
-      image: imagesUrl,
+      sizes,
+      images,
       date: Date.now(),
-    };
-
-    const product = new productModel(productData);
+    });
 
     await product.save();
-
-    res.json({ success: true, message: "Product added!", product });
-  } catch (error) {
-    console.log(error);
-    res.json({ success: false, error });
+    res.status(201).json({ success: true, product });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -95,18 +71,26 @@ const listProduct = async (req, res) => {
 // Remove Product
 
 const removeProduct = async (req, res) => {
-  console.log("product id --> " + req.params.id);
   try {
+    const product = await productModel.findById(req.params.id);
+    if (!product)
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+
+    // Remove images from Cloudinary
+    if (product.images && product.images.length > 0) {
+      for (const img of product.images) {
+        if (img.public_id) {
+          await cloudinary.uploader.destroy(img.public_id);
+        }
+      }
+    }
+
     await productModel.findByIdAndDelete(req.params.id);
-    res.json({
-      success: true,
-      message: "Product deleted!",
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error,
-    });
+    res.json({ success: true, message: "Product and images deleted" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -140,17 +124,71 @@ const singleProduct = async (req, res) => {
 // Update Product
 const updateProduct = async (req, res) => {
   try {
-    const updated = await productModel.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!updated) {
-      return res.status(404).json({ message: "Product not found" });
+    const product = await productModel.findById(req.params.id);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
-    res.json({ message: "Product updated", product: updated });
-  } catch (error) {
-    res.status(500).json({ message: "Update failed", error: error.message });
+
+    const {
+      name,
+      description,
+      price,
+      category,
+      subcategory,
+      bestseller,
+      sizes,
+    } = req.body;
+
+    // Prepare an array to hold the new image data
+    const newImagesData = [];
+    const existingImages = product.images || [];
+
+    // Handle image uploads and replacements
+    for (let i = 0; i < 4; i++) {
+      const file = req.files?.[`image${i + 1}`]?.[0];
+      if (file) {
+        // If there's a new image, upload it and replace the old one
+        // First, delete the old image from Cloudinary if it exists
+        if (existingImages[i] && existingImages[i].public_id) {
+          await cloudinary.uploader.destroy(existingImages[i].public_id);
+        }
+
+        // Upload the new image
+        const uploadResult = await cloudinary.uploader.upload(file.path, {
+          folder: "products",
+        });
+
+        newImagesData[i] = {
+          url: uploadResult.secure_url,
+          public_id: uploadResult.public_id,
+        };
+      } else if (existingImages[i]) {
+        // If no new image, keep the existing one
+        newImagesData[i] = existingImages[i];
+      }
+    }
+
+    // Update product fields
+    product.name = name || product.name;
+    product.description = description || product.description;
+    product.price = price ? Number(price) : product.price;
+    product.category = category || product.category;
+    product.subcategory = subcategory || product.subcategory;
+    product.bestseller =
+      bestseller !== undefined
+        ? bestseller === "true" || bestseller === true
+        : product.bestseller;
+    product.sizes = sizes ? JSON.parse(sizes) : product.sizes;
+    product.images = newImagesData.filter(Boolean); // Clean out any empty slots
+
+    await product.save();
+
+    res.json({ success: true, message: "Product updated", product });
+  } catch (err) {
+    console.error("Update Error:", err);
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 

@@ -26,6 +26,16 @@ productRouter.post(
 productRouter.delete("/remove/:id", removeProduct);
 productRouter.get("/list", listProduct);
 productRouter.post("/single", singleProduct);
-productRouter.put("/update/:id", updateProduct);
+productRouter.put(
+  "/update/:id",
+  adminAuth,
+  upload.fields([
+    { name: "image1", maxCount: 1 },
+    { name: "image2", maxCount: 1 },
+    { name: "image3", maxCount: 1 },
+    { name: "image4", maxCount: 1 },
+  ]),
+  updateProduct
+);
 
 export default productRouter;
