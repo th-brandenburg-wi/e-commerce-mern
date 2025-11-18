@@ -1,12 +1,12 @@
 meta {
-  name: All Products
+  name: GetAllOrder
   type: http
   seq: 2
 }
 
 get {
-  url: {{host}}/api/product/list
-  body: none
+  url: {{host}}/api/order/list
+  body: json
   auth: none
 }
 
@@ -15,5 +15,5 @@ headers {
 }
 
 vars:post-response {
-  product: res.body.products[0]
+  orderId: res.body.data[0]._id
 }

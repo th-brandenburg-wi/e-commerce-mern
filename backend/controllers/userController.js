@@ -1,6 +1,5 @@
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import { json } from "express";
 import jwt from "jsonwebtoken";
 
 //Token Creation
@@ -71,9 +70,7 @@ const loginUser = async (req, res) => {
       );
     }
     // Generate JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = createToken(user._id);
     res
       .status(200)
       .json({ success: true, message: "Login successful", token, user });

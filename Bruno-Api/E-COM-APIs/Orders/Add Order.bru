@@ -1,0 +1,47 @@
+meta {
+  name: Add Order
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/api/order/addOrder
+  body: json
+  auth: none
+}
+
+headers {
+  token: {{userToken}}
+}
+
+body:json {
+  {
+    "userId": "69161075219ec1138c5a83b1",
+    "items": [
+      {
+        "productId": "6917e43548b4c5006cd7d66f",
+        "quantity": 2
+      }
+    ],
+    "address": {
+      "firstName":"Max",
+      "lastName":"Mustermann",
+      "city":"Teststadt",
+      "zip":"34567",
+      "state":"Teststate",
+      "street":"Teststr. 12"
+    }
+  }
+}
+
+body:form-urlencoded {
+  userId: {{userID}}
+  Items: [{{product}}]
+  address: Test Str. 36, 12345, Teststadt
+}
+
+body:multipart-form {
+  userId: {{userID}}
+  items: [{{product}}]
+  address: Test Str. 36, 12345, Teststadt
+}
