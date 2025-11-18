@@ -14,7 +14,8 @@ const Orders = () => {
       const response = await axios.get(`${backendUrl}/api/order/user-orders`, {
         headers: { token },
       });
-      setData(response.data.data);
+      console.log("data --> " + JSON.stringify(response.data));
+      if (response.data.success) setData(response.data.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -38,7 +39,7 @@ const Orders = () => {
         <Title text1={"MY"} text2={"ORDERS"} />
       </div>
       <div className="w-full max-w-4xl flex flex-col gap-5">
-        {!data ? (
+        {data?.length === 0 ? (
           <div className="text-center text-gray-600 text-lg">
             You have not done any order yet.
           </div>

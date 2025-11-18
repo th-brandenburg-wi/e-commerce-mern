@@ -97,6 +97,10 @@ const ShopContextProvider = (props) => {
     return total;
   };
 
+  const clearCart = () => {
+    setCartItems({});
+  };
+
   const value = {
     products,
     token,
@@ -113,6 +117,7 @@ const ShopContextProvider = (props) => {
     updateQuantity,
     getCartTotalAmount,
     navigate,
+    clearCart,
   };
 
   return (
