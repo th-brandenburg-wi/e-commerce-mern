@@ -1,0 +1,19 @@
+meta {
+  name: DeleteOrderById
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{host}}/api/order/{{id}}
+  body: json
+  auth: none
+}
+
+headers {
+  token: {{adminToken}}
+}
+
+vars:pre-request {
+  id: {{orderId}}
+}

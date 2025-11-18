@@ -1,0 +1,19 @@
+meta {
+  name: All Products
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}/api/product/list
+  body: none
+  auth: none
+}
+
+headers {
+  token: {{adminToken}}
+}
+
+vars:post-response {
+  product: res.body.products[0]
+}

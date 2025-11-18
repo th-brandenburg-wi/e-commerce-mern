@@ -1,0 +1,25 @@
+meta {
+  name: Single Product
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{host}}/api/product/single
+  body: json
+  auth: none
+}
+
+headers {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "id":"6917bbde9e2b7c23825206bb"
+  }
+}
+
+vars:post-response {
+  productID: res.body.product._id
+}

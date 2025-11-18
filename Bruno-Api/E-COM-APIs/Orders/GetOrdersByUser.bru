@@ -1,0 +1,21 @@
+meta {
+  name: GetOrdersByUser
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{host}}/api/order/user-orders
+  body: none
+  auth: none
+}
+
+headers {
+  token: {{userToken}}
+}
+
+body:json {
+  {
+    "userId":"69161075219ec1138c5a83b1"
+  }
+}

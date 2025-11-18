@@ -1,0 +1,32 @@
+meta {
+  name: Add Product
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/api/product/add
+  body: multipartForm
+  auth: bearer
+}
+
+headers {
+  token: {{adminToken}}
+}
+
+auth:bearer {
+  token: 
+}
+
+body:multipart-form {
+  name: test-name
+  description: test-description
+  price: 100
+  category: test-category
+  subcategory: test-subcat
+  image1: @file(/Users/user/Documents/Workstation/THB/MERN/assets/frontend_assets/p_img2_1.png)
+  image2: @file(/Users/user/Documents/Workstation/THB/MERN/assets/frontend_assets/p_img2_2.png)
+  image3: @file(/Users/user/Documents/Workstation/THB/MERN/assets/frontend_assets/p_img2_3.png)
+  image4: @file(/Users/user/Documents/Workstation/THB/MERN/assets/frontend_assets/p_img2_4.png)
+  sizes: ["M", "S"]
+}
