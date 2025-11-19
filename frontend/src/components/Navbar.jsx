@@ -2,11 +2,14 @@ import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
+import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const { setShowSearch, getCartCount, token, setToken, navigate } =
     useContext(ShopContext);
+  const location = useLocation();
+  console.log("location --> " + JSON.stringify(location));
 
   const handleLogout = () => {
     setToken(null);
@@ -34,12 +37,15 @@ const Navbar = () => {
         </NavLink>
       </ul>
 
-      <div className="flex items-center gap-6">
+      <div className={`flex items-center gap-6 `}>
         <img
           onClick={() => setShowSearch(true)}
           src={assets.search_icon}
           alt="search"
-          className="w-5 cursor-pointer"
+          className={
+            `w-5 cursor-pointer ` +
+            (!location.pathname.includes("collection") ? "hidden" : "")
+          }
         />
         <div className="group relative">
           {!token ? (
