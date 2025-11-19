@@ -9,7 +9,7 @@ const Navbar = () => {
   const { setShowSearch, getCartCount, token, setToken, navigate } =
     useContext(ShopContext);
   const location = useLocation();
-  console.log("location --> " + JSON.stringify(location));
+  //console.log("location --> " + JSON.stringify(location));
 
   const handleLogout = () => {
     setToken(null);
