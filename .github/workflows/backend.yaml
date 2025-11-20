@@ -1,0 +1,40 @@
+name: Vercel Backend Deployment
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_BE_PROJECT_ID }}
+
+on:
+  push:
+    branches:
+      - "**" # run on all branches
+    paths:
+      - "backend/**" # only run if backend code is changed
+
+jobs:
+  deploy_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Deploy to Vercel
+        working-directory: ./backend
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            vercel --token=${{ secrets.VERCEL_TOKEN }} --prod --confirm
+          else
+            vercel --token=${{ secrets.VERCEL_TOKEN }}
+          fi
