@@ -24,10 +24,17 @@ const createReview = async (req, res) => {
       $push: { reviews: savedReview._id },
     });
 
-    res.json({ success: true, message: "Review added successfully", review: savedReview });
+    res.json({
+      success: true,
+      message: "Review added successfully",
+      review: savedReview,
+    });
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: "Error adding review" });
+    res.json({
+      success: false,
+      message: "Error adding review: " + error.message,
+    });
   }
 };
 
@@ -35,7 +42,9 @@ const createReview = async (req, res) => {
 const getProductReviews = async (req, res) => {
   try {
     const { productId } = req.params;
-    const reviews = await reviewModel.find({ product: productId }).populate("user", "name");
+    const reviews = await reviewModel
+      .find({ product: productId })
+      .populate("user", "name");
     res.json({ success: true, reviews });
   } catch (error) {
     console.log(error);
@@ -45,31 +54,37 @@ const getProductReviews = async (req, res) => {
 
 // Delete a review
 const deleteReview = async (req, res) => {
-    try {
-        const { reviewId } = req.params;
-        const userId = req.body.userId;
+  try {
+    const { reviewId } = req.params;
+    const userId = req.body.userId;
 
-        const review = await reviewModel.findById(reviewId);
+    const review = await reviewModel.findById(reviewId);
 
-        if (!review) {
-            return res.json({ success: false, message: "Review not found" });
-        }
-
-        if (review.user.toString() !== userId) {
-            return res.json({ success: false, message: "Not authorized to delete this review" });
-        }
-
-        await reviewModel.findByIdAndDelete(reviewId);
-
-        await productModel.findByIdAndUpdate(review.product, { $pull: { reviews: reviewId } });
-        await userModel.findByIdAndUpdate(review.user, { $pull: { reviews: reviewId } });
-
-        res.json({ success: true, message: "Review deleted successfully" });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: "Error deleting review" });
+    if (!review) {
+      return res.json({ success: false, message: "Review not found" });
     }
-};
 
+    if (review.user.toString() !== userId) {
+      return res.json({
+        success: false,
+        message: "Not authorized to delete this review",
+      });
+    }
+
+    await reviewModel.findByIdAndDelete(reviewId);
+
+    await productModel.findByIdAndUpdate(review.product, {
+      $pull: { reviews: reviewId },
+    });
+    await userModel.findByIdAndUpdate(review.user, {
+      $pull: { reviews: reviewId },
+    });
+
+    res.json({ success: true, message: "Review deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Error deleting review" });
+  }
+};
 
 export { createReview, getProductReviews, deleteReview };
