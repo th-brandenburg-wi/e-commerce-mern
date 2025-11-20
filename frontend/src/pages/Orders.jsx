@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
-import axios from "axios";
-import { backendUrl } from "../utils";
+import { getUserOrders } from "../services/api";
 import { assets } from "../assets/assets";
 
 const Orders = () => {
@@ -11,9 +10,7 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/order/user-orders`, {
-        headers: { token },
-      });
+      const response = await getUserOrders();
       console.log("data --> " + JSON.stringify(response.data));
       if (response.data.success) setData(response.data.data);
     } catch (error) {

@@ -14,6 +14,12 @@ const productSchema = new mongoose.Schema({
   sizes: { type: Array, required: true },
   bestseller: { type: Boolean },
   date: { type: Number, required: true },
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "review",
+    },
+  ],
 });
 
 const productModel =
