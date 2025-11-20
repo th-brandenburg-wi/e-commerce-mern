@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Title from "../components/Title";
 import { ShopContext } from "../context/ShopContext";
-import axios from "axios";
-import { backendUrl } from "../utils";
+import { placeOrder } from "../services/api";
 import { toast } from "react-toastify";
 
 const PlaceOrder = () => {
@@ -33,7 +32,7 @@ const PlaceOrder = () => {
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const placeOrder = async (event) => {
+  const onPlaceOrder = async (event) => {
     event.preventDefault();
 
     let orderItems = [];
@@ -52,11 +51,7 @@ const PlaceOrder = () => {
     };
 
     try {
-      const response = await axios.post(
-        `${backendUrl}/api/order/addOrder`,
-        orderData,
-        { headers: { token } }
-      );
+      const response = await placeOrder(orderData);
 
       if (response.data.success) {
         toast.success("Order Placed Successfully!");
@@ -84,7 +79,7 @@ const PlaceOrder = () => {
 
   return (
     <form
-      onSubmit={placeOrder}
+      onSubmit={onPlaceOrder}
       className="flex flex-col md:flex-row items-start justify-between gap-12 pt-5 sm:p-14 min-h-[80vh] border-t"
     >
       <div className="w-full md:w-[60%]">

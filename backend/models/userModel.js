@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema(
         ref: "order",
       },
     ],
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "review",
+        },
+    ],
   },
   { minimize: false }
 );

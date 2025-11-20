@@ -18,3 +18,14 @@ export const registerUser = (formData) =>
 export const getProducts = () => API.get("/api/product/list");
 export const getProductById = (id) => API.post("/api/product/single", { id });
 
+// Reviews
+export const getProductReviews = (productId) =>
+  API.get(`/api/review/${productId}`);
+export const createReview = (reviewData) => API.post("/api/review", reviewData);
+export const deleteReview = (reviewId) => API.delete(`/api/review/${reviewId}`);
+
+// Orders
+export const placeOrder = (orderData) =>
+  API.post("/api/order/addOrder", orderData);
+export const getUserOrders = () => API.get("/api/order/user-orders");
+export const getOrderById = (orderId) => API.get(`/api/order/${orderId}`);
