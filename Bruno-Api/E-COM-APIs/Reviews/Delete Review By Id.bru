@@ -1,0 +1,39 @@
+meta {
+  name: Delete Review By Id
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{host}}/api/review/{{reviewId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  token: {{userToken}}
+}
+
+auth:bearer {
+  token: {{userToken}}
+}
+
+body:json {
+  {
+    "productId": "{{productId}}",
+    "description": "Top Produkt",
+    "rating": 5
+  }
+}
+
+body:form-urlencoded {
+  product: {{productId}}
+  description: Top Product!
+  rating: 5
+  userId: {{userID}}
+  name: {{userName}}
+}
+
+vars:post-response {
+  reviewId: res.review._id
+}
