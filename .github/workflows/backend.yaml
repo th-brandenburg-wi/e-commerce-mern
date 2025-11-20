@@ -31,10 +31,9 @@ jobs:
         run: npm install --global vercel@latest
 
       - name: Deploy to Vercel
-        working-directory: ./backend
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            vercel --token=${{ secrets.VERCEL_TOKEN }} --prod --yes
+            vercel backend --token=${{ secrets.VERCEL_TOKEN }} --prod --yes
           else
-            vercel --token=${{ secrets.VERCEL_TOKEN }}
+            vercel backend --token=${{ secrets.VERCEL_TOKEN }}
           fi
