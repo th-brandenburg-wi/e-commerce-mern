@@ -1,0 +1,33 @@
+name: Vercel Production Backend Deployment
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_BE_PROJECT_ID }}
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install npm
+        run: |
+        npm install
+      
+
+  deploy:
+    needs: build
+    runs-on: ubuntu@latest
+    steps:
+      - uses: checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: npm install
+
+      - name: Deploy Backend to Vercel
+        run: npx vercel --token=${{ secrets.VERCEL_TOKEN }} --prod --confirm
