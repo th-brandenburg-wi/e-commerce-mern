@@ -4,7 +4,7 @@ This is a full-stack e-commerce website built with the MERN stack (MongoDB, Expr
 
 ## Live Demo
 
-[Link to the live demo]
+https://e-com.ybenihoud.com
 
 ## Features
 
