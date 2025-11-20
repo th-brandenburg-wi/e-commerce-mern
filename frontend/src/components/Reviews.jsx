@@ -5,9 +5,8 @@ import StarRating from "./StarRating";
 import { createReview, deleteReview, getProductReviews } from "../services/api";
 import { jwtDecode } from "jwt-decode";
 
-const Reviews = ({ productId }) => {
+const Reviews = ({ productId, reviews, fetchReviews, reviewsLoading }) => {
   const { token } = useContext(ShopContext);
-  const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("");
   const [userId, setUserId] = useState(null);
@@ -18,23 +17,6 @@ const Reviews = ({ productId }) => {
       setUserId(decodedToken.id);
     }
   }, [token]);
-
-  const fetchReviews = async () => {
-    try {
-      const response = await getProductReviews(productId);
-      if (response.data.success) {
-        setReviews(response.data.reviews);
-      }
-    } catch (error) {
-      console.error("Error fetching reviews", error);
-    }
-  };
-
-  useEffect(() => {
-    if (productId) {
-      fetchReviews();
-    }
-  }, [productId]);
 
   const submitReview = async (e) => {
     e.preventDefault();
@@ -72,45 +54,36 @@ const Reviews = ({ productId }) => {
     }
   };
 
-  const averageRating =
-    reviews.length > 0
-      ? reviews.reduce((acc, item) => acc + item.rating, 0) / reviews.length
-      : 0;
-
   return (
     <div className="mt-10">
       <h2 className="text-2xl font-bold mb-4">Reviews</h2>
 
-      {/* Average Rating */}
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold">
-          Average Rating: {averageRating.toFixed(1)} / 5
-        </h3>
-        <StarRating rating={averageRating} />
-      </div>
-
       {/* Existing Reviews */}
-      <div className="space-y-4">
-        {reviews.map((review) => (
-          <div key={review._id} className="border p-4 rounded-lg">
-            <div className="flex items-center mb-2">
-              <p className="font-semibold">{review.user.name}</p>
-              <div className="ml-4">
-                <StarRating rating={review.rating} />
+      {reviewsLoading ? (
+        <p>Loading reviews...</p>
+      ) : (
+        <div className="space-y-4">
+          {reviews.map((review) => (
+            <div key={review._id} className="border p-4 rounded-lg">
+              <div className="flex items-center mb-2">
+                <p className="font-semibold">{review.user.name}</p>
+                <div className="ml-4">
+                  <StarRating rating={review.rating} />
+                </div>
+                {userId === review.user._id && (
+                  <button
+                    onClick={() => handleDeleteReview(review._id)}
+                    className="ml-auto bg-red-500 text-white px-2 py-1 rounded text-xs"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
-              {userId === review.user._id && (
-                <button
-                  onClick={() => handleDeleteReview(review._id)}
-                  className="ml-auto bg-red-500 text-white px-2 py-1 rounded text-xs"
-                >
-                  Delete
-                </button>
-              )}
+              <p className="text-gray-600">{review.description}</p>
             </div>
-            <p className="text-gray-600">{review.description}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Add Review Form */}
       {token && (

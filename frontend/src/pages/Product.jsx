@@ -4,8 +4,9 @@ import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import RelatedProducts from "../components/RelatedProducts";
 import Reviews from "../components/Reviews";
-import { getProductById } from "../services/api";
+import { getProductById, getProductReviews } from "../services/api";
 import { toast } from "react-toastify";
+import StarRating from "../components/StarRating";
 
 const Product = () => {
   const { productId } = useParams();
@@ -13,28 +14,46 @@ const Product = () => {
   const [productData, setProductData] = useState(null);
   const [image, setImage] = useState("");
   const [size, setSize] = useState("");
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProductData = async () => {
-      try {
-        const response = await getProductById(productId);
-        if (response.data.success) {
-          setProductData(response.data.product);
-          if (response.data.product.images?.length) {
-            setImage(response.data.product.images[0].url);
-          }
-        } else {
-          toast.error("Failed to load product data.");
+  const fetchProductData = React.useCallback(async () => {
+    try {
+      const response = await getProductById(productId);
+      if (response.data.success) {
+        setProductData(response.data.product);
+        if (response.data.product.images?.length) {
+          setImage(response.data.product.images[0].url);
         }
-      } catch (error) {
-        toast.error("An error occurred while fetching the product.");
+      } else {
+        toast.error("Failed to load product data.");
       }
-    };
-
-    if (productId) {
-      fetchProductData();
+    } catch (error) {
+      toast.error("An error occurred while fetching the product.");
     }
   }, [productId]);
+
+  const fetchReviews = React.useCallback(async () => {
+    setReviewsLoading(true);
+    try {
+      const response = await getProductReviews(productId);
+      if (response.data.success) {
+        setReviews(response.data.reviews);
+      }
+    } catch (error) {
+      console.error("Error fetching reviews", error);
+    } finally {
+      setReviewsLoading(false);
+    }
+  }, [productId]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (productId) {
+      fetchProductData();
+      fetchReviews();
+    }
+  }, [productId, fetchProductData, fetchReviews]);
 
   if (!productData) {
     return (
@@ -43,6 +62,11 @@ const Product = () => {
       </div>
     );
   }
+
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((acc, item) => acc + item.rating, 0) / reviews.length
+      : 0;
 
   return (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
@@ -70,12 +94,14 @@ const Product = () => {
         <div className="flex-1">
           <h1 className="font-medium text-2xl mt-2">{productData.name}</h1>
           <div className="flex items-center gap-1 mt-2">
-            <img src={assets.star_icon} alt="" className="w-3.5" />
-            <img src={assets.star_icon} alt="" className="w-3.5" />
-            <img src={assets.star_icon} alt="" className="w-3.5" />
-            <img src={assets.star_icon} alt="" className="w-3.5" />
-            <img src={assets.star_dull_icon} alt="" className="w-3.5" />
-            <p className="pl-2">(122)</p>
+            {reviewsLoading ? (
+              <p>Loading reviews...</p>
+            ) : (
+              <>
+                <StarRating rating={averageRating} />
+                <p className="pl-2">({reviews.length})</p>
+              </>
+            )}
           </div>
           <p className="mt-5 text-3xl font-medium">
             {currency}
@@ -104,6 +130,7 @@ const Product = () => {
             onClick={() => {
               if (size) {
                 addToCart(productData._id, size);
+                toast.success("Added to cart!");
               } else {
                 toast.error("Please select a size.");
               }
@@ -126,9 +153,14 @@ const Product = () => {
         category={productData.category}
         subCategory={productData.subcategory}
       />
-      
+
       {/* Reviews Section */}
-      <Reviews productId={productId} />
+      <Reviews
+        productId={productId}
+        reviews={reviews}
+        fetchReviews={fetchReviews}
+        reviewsLoading={reviewsLoading}
+      />
     </div>
   );
 };
