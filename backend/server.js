@@ -8,6 +8,7 @@ import productRouter from "./routes/productRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import reviewRouter from "./routes/reviewRoute.js";
 import contentRouter from "./routes/contentRoute.js";
+import assetRouter from "./routes/assetRoute.js";
 
 // App Config
 const app = express();
@@ -29,6 +30,7 @@ app.use("/api/product", productRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/review", reviewRouter);
 app.use("/api/content", contentRouter);
+app.use("/api/asset", assetRouter);
 
 app.listen(port, () => {
   console.log("SERVER started on " + port);

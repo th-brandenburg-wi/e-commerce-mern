@@ -51,6 +51,7 @@ const pageConfig = {
     phone: { label: "Footer Phone Number", placeholder: "e.g., +49-123456789" },
     email: { label: "Footer Email", placeholder: "e.g., contact@marokko-shop.com" },
     copyright: { label: "Footer Copyright", placeholder: "e.g., Copyright @ 2025 Marokko Shop - All Right Reserved" },
+    logoUrl: { label: "Logo URL", placeholder: "Enter the URL for the logo" },
   },
 };
 
