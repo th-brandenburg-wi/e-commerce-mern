@@ -51,7 +51,8 @@ const Add = ({ token }) => {
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "An error occurred while adding the product"
+        error.response?.data?.message ||
+          "An error occurred while adding the product"
       );
     }
   };
@@ -70,4 +71,3 @@ const Add = ({ token }) => {
 };
 
 export default Add;
-
