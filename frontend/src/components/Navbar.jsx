@@ -1,15 +1,32 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import axios from "axios";
 import { assets } from "../assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { useLocation } from "react-router-dom";
+import { backendUrl } from "../utils";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const { setShowSearch, getCartCount, token, setToken, navigate } =
     useContext(ShopContext);
   const location = useLocation();
-  //console.log("location --> " + JSON.stringify(location));
+  const [content, setContent] = useState({ logoUrl: assets.logo });
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/content/navbar`);
+        if (response.data.success && response.data.data.content.logoUrl) {
+          setContent(response.data.data.content);
+        }
+      } catch (error) {
+        console.error("Error fetching navbar content:", error);
+      }
+    };
+
+    fetchContent();
+  }, []);
 
   const handleLogout = () => {
     setToken(null);
@@ -19,7 +36,7 @@ const Navbar = () => {
   return (
     <div className="flex items-center justify-between py-5 font-medium">
       <Link to="/">
-        <img src={assets.logo} alt="logo" className="w-36" />
+        <img src={content.logoUrl || assets.logo} alt="logo" className="w-36" />
       </Link>
 
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">

@@ -45,6 +45,7 @@ const pageConfig = {
   navbar: {
     title: { label: "Navbar Offer Text", placeholder: "e.g., Angebot" },
     body: { label: "Navbar Body", placeholder: "This is not used in the frontend yet." },
+    logoUrl: { label: "Logo URL", placeholder: "Enter the URL for the logo" },
   },
   footer: {
     description: { label: "Footer Description", placeholder: "Enter the description for the footer." },

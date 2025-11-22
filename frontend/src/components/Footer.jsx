@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { assets } from "../assets/assets";
 import { Link } from "react-router-dom";
 import { backendUrl } from "../utils";
 
@@ -31,7 +32,7 @@ const Footer = () => {
     <div>
       <div className="flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm">
         <div>
-          <img src={content.logoUrl} className="mb-5 w-32 " alt="" />
+          <img src={content.logoUrl || assets.logo} className="mb-5 w-32 " alt="" />
           <p className="w-full md:w-2/3 text-gray-600">
             {content.description}
           </p>
