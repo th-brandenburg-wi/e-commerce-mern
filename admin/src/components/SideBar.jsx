@@ -45,6 +45,14 @@ const SideBar = () => {
           <img src={assets.order_icon} className="w-5 h-5" alt="" />
           <p className="hidden md:block ">Assets</p>
         </NavLink>
+
+        <NavLink
+          to={"/branding"}
+          className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-1"
+        >
+          <img src={assets.order_icon} className="w-5 h-5" alt="" />
+          <p className="hidden md:block ">Branding</p>
+        </NavLink>
       </div>
     </div>
   );

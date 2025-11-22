@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import { ToastContainer } from "react-toastify";
 import Content from "./pages/Content";
 import Assets from "./pages/Assets";
+import Branding from "./pages/Branding";
 
 const App = () => {
   const [token, setToken] = useState(
@@ -38,6 +39,7 @@ const App = () => {
                 <Route path="/orders" element={<Orders token={token} />} />
                 <Route path="/content" element={<Content token={token} />} />
                 <Route path="/assets" element={<Assets token={token} />} />
+                <Route path="/branding" element={<Branding token={token} />} />
               </Routes>
             </div>
           </div>

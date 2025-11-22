@@ -7,6 +7,7 @@ const pageConfig = {
   home: {
     title: { label: "Hero Title", placeholder: "e.g., Latest Arrivals" },
     body: { label: "Hero Subtitle", placeholder: "e.g., OUR BESTSELLERS" },
+    imageUrl: { label: "Hero Image URL", placeholder: "This is updated from the Branding page" },
   },
   about: {
     title: { label: "About Page Title", placeholder: "e.g., ABOUT US" },
