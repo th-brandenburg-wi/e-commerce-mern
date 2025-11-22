@@ -9,6 +9,7 @@ https://e-com.ybenihoud.com
 ## Features
 
 ### Customer Frontend
+
 - **User Authentication**: Secure user registration and login with JWT.
 - **Product Catalog**: Browse and search for products.
 - **Product Details**: View detailed information and customer reviews for each product.
@@ -18,12 +19,14 @@ https://e-com.ybenihoud.com
 - **Responsive Design**: Fully responsive and mobile-friendly user interface.
 
 ### Admin Panel
+
 - **Dashboard**: An overview of sales, orders, and products.
 - **Product Management**: Add, update, and remove products from the store.
 - **Order Management**: View and manage customer orders.
 - **User Management**: View and manage registered users.
 
 ### Backend API
+
 - **RESTful API**: A well-structured API for managing products, users, orders, and reviews.
 - **Authentication & Authorization**: Secure API endpoints with JWT-based authentication and middleware.
 - **Image Uploads**: Product image uploads handled with Multer and hosted on Cloudinary.
@@ -63,30 +66,33 @@ This project is a monorepo with the following structure:
 ### Installation
 
 1.  **Clone the repository:**
+
     ```bash
     git clone https://github.com/your-username/e-commerce-mern.git
     cd e-commerce-mern
     ```
 
 2.  **Install backend dependencies:**
+
     ```bash
     cd backend
     npm install
-    cd ..
+    npm run server
     ```
 
 3.  **Install frontend dependencies:**
+
     ```bash
     cd frontend
     npm install
-    cd ..
+    npm run dev
     ```
 
 4.  **Install admin dependencies:**
     ```bash
     cd admin
     npm install
-    cd ..
+    npm run dev
     ```
 
 ### Configuration
@@ -106,15 +112,15 @@ CLOUDINARY_API_SECRET=<Your_Cloudinary_API_Secret>
 
 ### Backend (`/backend`)
 
--   `npm start`: Start the server in production mode.
--   `npm run server`: Start the server in development mode with `nodemon`.
+- `npm start`: Start the server in production mode.
+- `npm run server`: Start the server in development mode with `nodemon`.
 
 ### Frontend (`/frontend`) & Admin (`/admin`)
 
--   `npm run dev`: Start the development server.
--   `npm run build`: Build the application for production.
--   `npm run lint`: Lint the codebase.
--   `npm run preview`: Preview the production build locally.
+- `npm run dev`: Start the development server.
+- `npm run build`: Build the application for production.
+- `npm run lint`: Lint the codebase.
+- `npm run preview`: Preview the production build locally.
 
 ## API Reference
 
@@ -124,7 +130,7 @@ The API endpoints can be explored and tested using the Bruno collection located 
 
 This project uses GitHub Actions for continuous integration and continuous deployment to Vercel.
 
--   `.github/workflows/backend.yaml`: Deploys the backend to Vercel.
--   `.github/workflows/frontend.yaml`: Deploys the frontend to Vercel.
+- `.github/workflows/backend.yaml`: Deploys the backend to Vercel.
+- `.github/workflows/frontend.yaml`: Deploys the frontend to Vercel.
 
 Both workflows will automatically deploy to production on pushes to the `main` branch and create preview deployments for pushes to any other branch.
