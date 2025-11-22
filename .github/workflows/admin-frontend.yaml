@@ -9,7 +9,7 @@ on:
     branches:
       - "main" # run on all branches
     paths:
-      - "frontend/**" # only run if admin code is changed
+      - "admin/**" # only run if admin code is changed
 
 jobs:
   deploy_admin:
