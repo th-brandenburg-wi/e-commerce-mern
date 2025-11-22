@@ -7,6 +7,7 @@ import userRouter from "./routes/userRoute.js";
 import productRouter from "./routes/productRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import reviewRouter from "./routes/reviewRoute.js";
+import contentRouter from "./routes/contentRoute.js";
 
 // App Config
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/review", reviewRouter);
+app.use("/api/content", contentRouter);
 
 app.listen(port, () => {
   console.log("SERVER started on " + port);

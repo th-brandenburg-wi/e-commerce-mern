@@ -1,24 +1,30 @@
-import React from 'react'
-import {assets} from '../assets/assets'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { backendUrl } from '../utils';
 
 const OurPolicy = () => {
+  const [content, setContent] = useState({ body: '' });
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/content/policy`);
+        if (response.data.success) {
+          setContent(response.data.data.content);
+        }
+      } catch (error) {
+        console.error('Error fetching policy content:', error);
+      }
+    };
+
+    fetchContent();
+  }, []);
+
   return (
-    <div className='flex flex-col sm:flex-row justify-around gap-12 sm:gap-2 text-center py-20 text-xs sm:text-sm md:text-base text-gray-700 '>
-      <div>
-        <img src={assets.exchange_icon} className='w-12 m-auto mb-5' alt="" />
-        <p className='font-semibold'>Rückgabe Bedingungen</p>
-        <p className='text-gray-400'>Sie können bequem die Waren zurückgeben</p>
-      </div>
-      <div>
-        <img src={assets.quality_icon} className='w-12 m-auto mb-5' alt="" />
-        <p className='font-semibold'>14-Tage Rückgabe Guarantie</p>
-        <p className='text-gray-400'>Sie können in 14 Tagen ohne Fragen Waren zurückgeben</p>
-      </div>
-      <div>
-        <img src={assets.support_img} className='w-12 m-auto mb-5' alt="" />
-        <p className='font-semibold'>24/7 Kundenservice</p>
-        <p className='text-gray-400'>Jederzeit unterstützen wir Sie gerne weiter</p>
-      </div>
+    <div
+      className='flex flex-col sm:flex-row justify-around gap-12 sm:gap-2 text-center py-20 text-xs sm:text-sm md:text-base text-gray-700 '
+      dangerouslySetInnerHTML={{ __html: content.body }}
+    >
     </div>
   )
 }

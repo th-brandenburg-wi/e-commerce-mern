@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import ProductItem from "../components/ProductItem";
+import { backendUrl } from "../utils";
 
 const RelatedProducts = ({ category, subCategory }) => {
   const { products } = useContext(ShopContext);
   const [related, setRelated] = useState([]);
-
-  //console.log("fetched Products --> " + products);
+  const [content, setContent] = useState({ title: "Related PRODUCTS" });
+  const [titleParts, setTitleParts] = useState(["Related", "PRODUCTS"]);
 
   useEffect(() => {
     if (products.length > 0 && category) {
@@ -37,10 +39,27 @@ const RelatedProducts = ({ category, subCategory }) => {
     }
   }, [products, category, subCategory]);
 
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/content/relatedproducts`);
+        if (response.data.success) {
+          setContent(response.data.data.content);
+          const parts = response.data.data.content.title.split(' ');
+          setTitleParts(parts.length > 1 ? [parts[0], parts.slice(1).join(' ')] : [parts[0], '']);
+        }
+      } catch (error) {
+        console.error('Error fetching related products content:', error);
+      }
+    };
+
+    fetchContent();
+  }, []);
+
   return related.length > 0 ? (
     <div className="my-24">
       <div className="text-center text-3xl py-2">
-        <Title text1={"Related"} text2={"PRODUCTS"} />
+        <Title text1={titleParts[0]} text2={titleParts[1]} />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6">
         {related.map((item, index) => (

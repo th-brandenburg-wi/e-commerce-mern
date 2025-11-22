@@ -3,6 +3,58 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { backendUrl } from "../utils";
 
+const pageConfig = {
+  home: {
+    title: { label: "Hero Title", placeholder: "e.g., Latest Arrivals" },
+    body: { label: "Hero Subtitle", placeholder: "e.g., OUR BESTSELLERS" },
+  },
+  about: {
+    title: { label: "About Page Title", placeholder: "e.g., ABOUT US" },
+    body: { label: "About Page Content", placeholder: "Enter the content for the about page. HTML is supported." },
+    thankYouTitle: { label: "Thank You Section Title", placeholder: "e.g., Your Shop Experience matters!" },
+    thankYouBody: { label: "Thank You Section Body", placeholder: "e.g., Thank you for choosing us." },
+  },
+  contact: {
+    title: { label: "Contact Page Title", placeholder: "e.g., CONTACT US" },
+    body: { label: "Contact Page Content", placeholder: "Enter the content for the contact page. HTML is supported." },
+  },
+  policy: {
+    title: { label: "Policy Section Title", placeholder: "e.g., Our Policy" },
+    body: { label: "Policy Section Content", placeholder: "Enter the content for the policy section. HTML is supported." },
+  },
+  bestseller: {
+    title: { label: "Best Seller Section Title", placeholder: "e.g., BEST SELLERS" },
+    body: { label: "Best Seller Section Description", placeholder: "Enter the description for the best seller section." },
+  },
+  latestcollection: {
+    title: { label: "Latest Collection Title", placeholder: "e.g., Latest COLLECTION" },
+    body: { label: "Latest Collection Description", placeholder: "Enter the description for the latest collection section." },
+  },
+  newsletter: {
+    title: { label: "Newsletter Title", placeholder: "e.g., Abonnieren Sie und bekommen 20% Rabatt" },
+    body: { label: "Newsletter Description", placeholder: "Enter the description for the newsletter section." },
+  },
+  impressum: {
+    title: { label: "Impressum Page Title", placeholder: "e.g., Impressum" },
+    body: { label: "Impressum Page Content", placeholder: "Enter the content for the impressum page. HTML is supported." },
+  },
+  relatedproducts: {
+    title: { label: "Related Products Title", placeholder: "e.g., Related PRODUCTS" },
+    body: { label: "Related Products Description", placeholder: "This is not used in the frontend yet." },
+  },
+  navbar: {
+    title: { label: "Navbar Offer Text", placeholder: "e.g., Angebot" },
+    body: { label: "Navbar Body", placeholder: "This is not used in the frontend yet." },
+  },
+  footer: {
+    description: { label: "Footer Description", placeholder: "Enter the description for the footer." },
+    phone: { label: "Footer Phone Number", placeholder: "e.g., +49-123456789" },
+    email: { label: "Footer Email", placeholder: "e.g., contact@marokko-shop.com" },
+    copyright: { label: "Footer Copyright", placeholder: "e.g., Copyright @ 2025 Marokko Shop - All Right Reserved" },
+  },
+};
+
+
 const Content = ({ token }) => {
   const [page, setPage] = useState("home");
   const [content, setContent] = useState({});
@@ -50,84 +102,40 @@ const Content = ({ token }) => {
   };
 
   const renderForm = () => {
-    if (page === 'home' || page === 'about' || page === 'contact' || page === 'policy' || page === 'bestseller' || page === 'latestcollection' || page === 'newsletter' || page === 'impressum') {
+    const config = pageConfig[page];
+    if (!config) return null;
+
+    return Object.keys(config).map((key) => {
+      const { label, placeholder } = config[key];
+      const isTextarea = ['body', 'description'].includes(key) || (config[key].placeholder && config[key].placeholder.includes("HTML"));
+
       return (
-        <>
-          <div className="mb-4">
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={content.title || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="body" className="block text-sm font-medium text-gray-700">Body</label>
+        <div className="mb-4" key={key}>
+          <label htmlFor={key} className="block text-sm font-medium text-gray-700">{label}</label>
+          {isTextarea ? (
             <textarea
-              id="body"
-              name="body"
-              rows="10"
-              value={content.body || ''}
+              id={key}
+              name={key}
+              rows={key === 'description' ? 5 : 10}
+              value={content[key] || ''}
               onChange={handleInputChange}
+              placeholder={placeholder}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             ></textarea>
-          </div>
-        </>
+          ) : (
+            <input
+              type="text"
+              id={key}
+              name={key}
+              value={content[key] || ''}
+              onChange={handleInputChange}
+              placeholder={placeholder}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          )}
+        </div>
       );
-    } else if (page === 'footer') {
-      return (
-        <>
-          <div className="mb-4">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-            <textarea
-              id="description"
-              name="description"
-              rows="5"
-              value={content.description || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            ></textarea>
-          </div>
-          <div className="mb-4">
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
-            <input
-              type="text"
-              id="phone"
-              name="phone"
-              value={content.phone || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              value={content.email || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="copyright" className="block text-sm font-medium text-gray-700">Copyright</label>
-            <input
-              type="text"
-              id="copyright"
-              name="copyright"
-              value={content.copyright || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-        </>
-      );
-    }
-    return null;
+    });
   };
 
   return (
@@ -143,6 +151,8 @@ const Content = ({ token }) => {
         <button onClick={() => setPage("latestcollection")} className={`px-4 py-2 rounded ${page === 'latestcollection' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Latest Collection</button>
         <button onClick={() => setPage("newsletter")} className={`px-4 py-2 rounded ${page === 'newsletter' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Newsletter</button>
         <button onClick={() => setPage("impressum")} className={`px-4 py-2 rounded ${page === 'impressum' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Impressum</button>
+        <button onClick={() => setPage("navbar")} className={`px-4 py-2 rounded ${page === 'navbar' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Navbar</button>
+        <button onClick={() => setPage("relatedproducts")} className={`px-4 py-2 rounded ${page === 'relatedproducts' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Related Products</button>
       </div>
 
       <form onSubmit={updateContent}>
