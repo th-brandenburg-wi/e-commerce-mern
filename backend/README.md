@@ -16,7 +16,7 @@ This is the backend API for the MERN E-commerce platform. It's a Node.js applica
 -   `/api/product`: Manage products (list, add, update, remove).
 -   `/api/order`: Manage orders (place order, view orders).
 -   `/api/review`: Manage product reviews.
--   `/api/content`: Manage dynamic website content.
+-   `/api/content`: Manage dynamic website content. ( still in working )
 
 ## Getting Started
 
