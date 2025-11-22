@@ -8,9 +8,8 @@ This is the customer-facing storefront for the MERN E-commerce platform. It's a 
 -   Product browsing and search.
 -   Product details page with reviews.
 -   Shopping cart functionality.
--   Checkout with Stripe and Razorpay.
 -   Order history.
--   Dynamic content for the home, about, and contact pages.
+-   Dynamic content for the home, about, and contact pages. ( still in working )
 
 ## Tech Stack
 
