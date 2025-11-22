@@ -61,7 +61,7 @@ This project is a monorepo with the following structure:
 - Node.js (v18 or higher)
 - npm
 - A MongoDB connection string (you can get one from [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
-- API keys for Stripe, Razorpay, and Cloudinary.
+- API keys Cloudinary.
 
 ### Installation
 
