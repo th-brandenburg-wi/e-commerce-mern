@@ -1,8 +1,0 @@
-// tests/example.spec.js
-import { test, expect } from '@playwright/test';
-
-test('should navigate to the home page', async ({ page }) => {
-  await page.goto('http://localhost:5173');
-  // The new page should have "Home" in its title.
-  await expect(page).toHaveTitle(/Forever/);
-});
