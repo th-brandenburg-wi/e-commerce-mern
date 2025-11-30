@@ -1,0 +1,58 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [ testing ]
+jobs:
+  test_admin:
+    name: 'Test Admin'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./admin
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        working-directory: ./admin
+      - name: Run Playwright tests
+        run: npx playwright test
+        working-directory: ./admin
+
+  test_frontend:
+    name: 'Test Frontend'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        working-directory: ./frontend
+      - name: Run Playwright tests
+        run: npx playwright test
+        working-directory: ./frontend
+
+  test_backend:
+    name: 'Test Backend'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./backend
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        working-directory: ./backend
+      - name: Run Playwright tests
+        run: npx playwright test
+        working-directory: ./backend
